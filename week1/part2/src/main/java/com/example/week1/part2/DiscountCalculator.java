@@ -5,6 +5,10 @@ import java.util.List;
 public class DiscountCalculator {
 	private List<DiscountApplier> discountAppliers;
 
+	public DiscountCalculator(List<DiscountApplier> discountAppliers) {
+		this.discountAppliers = discountAppliers;
+	}
+
 	public Discount calculateTotalDiscountRate(Person person) {
 		System.out.println("Calculating discount rate for person [" + person + "]");
 		return new Discount(this.discountAppliers
