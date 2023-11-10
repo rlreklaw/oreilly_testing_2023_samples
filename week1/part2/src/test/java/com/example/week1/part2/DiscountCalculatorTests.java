@@ -3,9 +3,9 @@ package com.example.week1.part2;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class DiscountCalculatorTests {
 
@@ -13,7 +13,7 @@ public class DiscountCalculatorTests {
 
 	List<DiscountApplier> a = new ArrayList<>();
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		 ReflectionUtils.injectDependency(DiscountCalculator.class, "discountAppliers", d, a);
 	}
@@ -22,6 +22,6 @@ public class DiscountCalculatorTests {
 	public void testCalculateTotalDiscountRate() {
 		Person p = new Person("test", 1, Occupation.UNEMPLOYED);
 		Discount dis = d.calculateTotalDiscountRate(p);
-		Assert.assertEquals(0D, dis.getRate(), 0D);
+		Assertions.assertEquals(0D, dis.getRate(), 0D);
 	}
 }

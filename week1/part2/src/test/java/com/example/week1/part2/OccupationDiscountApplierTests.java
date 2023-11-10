@@ -1,7 +1,7 @@
 package com.example.week1.part2;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class OccupationDiscountApplierTests {
 
@@ -14,6 +14,6 @@ public class OccupationDiscountApplierTests {
 
 		double discountRate = a.getDiscountRate(p);
 
-		Assert.assertEquals(discountRate, 0D, 0D);
+		Assertions.assertEquals(discountRate, 0D, 0D);
 	}
 }
