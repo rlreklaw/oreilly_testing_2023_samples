@@ -12,7 +12,8 @@ public class Week1Part2 {
 		if (args.length != 3) {
 			throw new IllegalArgumentException("Wrong number of arguments " + Arrays.toString(args) + ". There must be exactly 3 arguments");
 		}
-		List<DiscountApplier> appliers = Arrays.asList(new OccupationDiscountApplier(), new NoOfBoughtGoodsDiscountApplier(), new NameDiscountApplier());
+		List<DiscountApplier> appliers = Arrays.asList(new OccupationDiscountApplier(new DatabaseOccupationRateRepository()),
+				new NoOfBoughtGoodsDiscountApplier(), new NameDiscountApplier());
 		DiscountCalculator discountCalculator = new DiscountCalculator(appliers);
 
 		Person person = new Person(args[0], Integer.parseInt(args[1]), Occupation.valueOf(args[2]));

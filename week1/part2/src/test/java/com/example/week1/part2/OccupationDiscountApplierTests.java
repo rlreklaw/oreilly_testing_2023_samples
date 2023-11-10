@@ -5,15 +5,16 @@ import org.junit.jupiter.api.Test;
 
 public class OccupationDiscountApplierTests {
 
-	// WARNING: This test is slow it connects to a database
 	@Test
-	public void testGetDiscountRate() {
-		OccupationDiscountApplier a = new OccupationDiscountApplier();
+	public void should_return_discount_rate_from_repository() {
+		final double FIXED_RATE = 42D;
+
+		OccupationDiscountApplier a = new OccupationDiscountApplier(person -> FIXED_RATE);
 
 		Person p = new Person("name", 100, Occupation.UNEMPLOYED);
 
 		double discountRate = a.getDiscountRate(p);
 
-		Assertions.assertEquals(discountRate, 0D, 0D);
+		Assertions.assertEquals(discountRate, FIXED_RATE, 0D);
 	}
 }
