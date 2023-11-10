@@ -14,7 +14,7 @@ public class DiscountCalculatorTests {
 	void should_return_no_discount_for_no_appliers(){
 		final double NO_DISCOUNT = 0D;
 
-		DiscountCalculator dc = new DiscountCalculator(Collections.EMPTY_LIST);
+		DiscountCalculator dc = new DiscountCalculator(Collections.emptyList());
 
 		Discount discount = dc.calculateTotalDiscountRate(person());
 
