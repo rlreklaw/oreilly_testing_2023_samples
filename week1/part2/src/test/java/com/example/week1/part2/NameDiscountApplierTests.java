@@ -6,10 +6,6 @@ import org.junit.jupiter.api.Test;
 
 class NameDiscountApplierTests {
 
-	private final int MIN_VALID_NAME_LEN = 3;
-	private final double NO_DISCOUNT_VALUE = 0D;
-	private final double NAME_DISCOUNT_VALUE = 8D;
-
 	private static NameDiscountApplier discountApplier;
 
 	@BeforeAll
@@ -23,6 +19,7 @@ class NameDiscountApplierTests {
 
 		double discount = discountApplier.getDiscountRate(validNamePerson);
 
+		double NAME_DISCOUNT_VALUE = 8D;
 		Assertions.assertEquals(NAME_DISCOUNT_VALUE, discount, 0.01D);
 	}
 
@@ -32,6 +29,7 @@ class NameDiscountApplierTests {
 
 		double discount = discountApplier.getDiscountRate(validNamePerson);
 
+		double NO_DISCOUNT_VALUE = 0D;
 		Assertions.assertEquals(NO_DISCOUNT_VALUE, discount, 0.01D);
 	}
 }

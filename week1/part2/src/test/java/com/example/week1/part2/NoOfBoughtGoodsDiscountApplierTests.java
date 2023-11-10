@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 class NoOfBoughtGoodsDiscountApplierTests {
 
 	private final int MIN_ITEM_COUNT_FOR_DISCOUNT = 5;
-	private final double NO_DISCOUNT = 0D;
-	private final double ITEM_COUNT_DISCOUNT = 5D;
 
 	private static NoOfBoughtGoodsDiscountApplier discountApplier;
 
@@ -24,6 +22,7 @@ class NoOfBoughtGoodsDiscountApplierTests {
 
 		double discount = discountApplier.getDiscountRate(tooFewItemsPerson);
 
+		double NO_DISCOUNT = 0D;
 		Assertions.assertEquals(NO_DISCOUNT, discount, 0.01D);
 	}
 
@@ -33,6 +32,7 @@ class NoOfBoughtGoodsDiscountApplierTests {
 
 		double discount = discountApplier.getDiscountRate(enoughItemsPerson);
 
+		double ITEM_COUNT_DISCOUNT = 5D;
 		Assertions.assertEquals(ITEM_COUNT_DISCOUNT, discount, 0.01D);
 	}
 
