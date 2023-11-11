@@ -1,19 +1,17 @@
 package com.example.week1.part2;
 
-import static com.example.week1.part2.assertion.DiscountAssert.assertThat;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.example.week1.part2.assertion.DiscountAssert.assertThat;
 
 public class DiscountCalculatorTests {
 
 
 	@Test
 	void should_return_no_discount_for_no_appliers(){
-		final double NO_DISCOUNT = 0D;
 
 		DiscountCalculator dc = new DiscountCalculator(Collections.emptyList());
 
