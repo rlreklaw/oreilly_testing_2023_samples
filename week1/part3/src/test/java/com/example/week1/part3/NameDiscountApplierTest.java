@@ -1,13 +1,13 @@
 package com.example.week1.part3;
 
-import static com.example.week1.part3.assertion.PersonAssert.assertThat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.mockito.Mockito.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static com.example.week1.part3.assertion.PersonAssert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class NameDiscountApplierTest {
@@ -23,7 +23,7 @@ class NameDiscountApplierTest {
 		verify(messageSender, times(1))
 				.sendMessage(new Message(EventType.DISCOUNT_CALCULATED));
 
-		assertEquals(NameDiscountApplier.DISCOUNT_RATE, person.getDiscountRate());
+		assertThat(person).hasDiscountRateEqualTo(NameDiscountApplier.DISCOUNT_RATE);
 	}
 
 	@Test
