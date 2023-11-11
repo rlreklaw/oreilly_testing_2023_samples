@@ -27,7 +27,7 @@ class NameDiscountApplierTest {
 	}
 
 	@Test
-	void should_apply_discount_when_name_lenth_equals_threshold() {
+	void should_apply_discount_when_name_length_equals_threshold() {
 		Person person = person(NameDiscountApplier.NAME_LENGTH_THRESHOLD);
 
 		applier().applyDiscount(person);
@@ -36,7 +36,7 @@ class NameDiscountApplierTest {
 	}
 
 	@Test
-	void should_apply_discount_when_name_lenth_longer_than_threshold() {
+	void should_apply_discount_when_name_length_longer_than_threshold() {
 		Person person = person(NameDiscountApplier.NAME_LENGTH_THRESHOLD + 1);
 
 		applier().applyDiscount(person);
@@ -45,7 +45,7 @@ class NameDiscountApplierTest {
 	}
 
 	@Test
-	void should_not_apply_discount_when_name_lenth_shorter_than_threshold() {
+	void should_not_apply_discount_when_name_length_shorter_than_threshold() {
 		Person person = person(NameDiscountApplier.NAME_LENGTH_THRESHOLD - 1);
 
 		applier().applyDiscount(person);
