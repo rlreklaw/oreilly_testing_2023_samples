@@ -8,7 +8,7 @@
 		<groupId>com.example.testingworkshop</groupId>
 		<artifactId>testing-workshop-2023-samples-parent-week1</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>testing-workshop-2023-samples-week1-part3</artifactId>
@@ -16,5 +16,65 @@
 
 	<name>${project.artifactId}</name>
 	<description>${project.artifactId}</description>
+
+	<properties>
+		<junit-bom.version>5.10.1</junit-bom.version>
+		<surefire.version>3.1.2</surefire.version>
+		<failsafe.version>3.1.2</failsafe.version>
+		<mockito-core.version>5.4.0</mockito-core.version>
+		<mockito-junit-jupiter.version>5.5.2</mockito-junit-jupiter.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit-bom.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito-core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${mockito-junit-jupiter.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.24.2</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>3.1.2</version>
+			</plugin>
+
+		</plugins>
+	</build>
+
 
 </project>
