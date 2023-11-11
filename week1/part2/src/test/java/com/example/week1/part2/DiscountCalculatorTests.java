@@ -1,5 +1,6 @@
 package com.example.week1.part2;
 
+import static com.example.week1.part2.assertion.DiscountAssert.assertThat;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -18,7 +19,7 @@ public class DiscountCalculatorTests {
 
 		Discount discount = dc.calculateTotalDiscountRate(person());
 
-		assertEquals(NO_DISCOUNT, discount.getRate(), 0.01D);
+		assertThat(discount).isNotSet();
 	}
 
 	@Test
@@ -31,7 +32,7 @@ public class DiscountCalculatorTests {
 
 		Discount discount = dc.calculateTotalDiscountRate(person());
 
-		assertEquals(FIXED_DISCOUNT_RATE1 + FIXED_DISCOUNT_RATE2, discount.getRate(), 0.01D);
+		assertThat(discount).isEqualTo(FIXED_DISCOUNT_RATE1 + FIXED_DISCOUNT_RATE2);
 	}
 
 	private Person person() {
