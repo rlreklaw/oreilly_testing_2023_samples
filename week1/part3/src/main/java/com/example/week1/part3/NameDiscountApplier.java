@@ -1,6 +1,8 @@
 package com.example.week1.part3;
 
 public class NameDiscountApplier implements DiscountApplier {
+	public static final int NAME_LENGTH_THRESHOLD = 3;
+	public static final double DISCOUNT_RATE = 8D;
 
 	private final MessageSender messageSender;
 
@@ -16,9 +18,9 @@ public class NameDiscountApplier implements DiscountApplier {
 	}
 
 	private double rate(Person person) {
-		if (person.getName().length() < 3) { // most likely a prank!
+		if (person.getName().length() < NAME_LENGTH_THRESHOLD) { // most likely a prank!
 			return 0D;
 		}
-		return 8D;
+		return DISCOUNT_RATE;
 	}
 }
