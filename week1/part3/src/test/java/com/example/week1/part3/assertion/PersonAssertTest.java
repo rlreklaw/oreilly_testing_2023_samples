@@ -27,7 +27,29 @@ class PersonAssertTest {
 	}
 
 	@Test
-	public void hasDiscountRateEqualTo() {
+	public void should_not_throw_exception_when_discount_equal() {
+		final double DISCOUNT_RATE = 7D;
+
+		Person person = person("Fred", 11, Occupation.EMPLOYED);
+		person.setDiscountRate(DISCOUNT_RATE);
+		PersonAssert personAssert = new PersonAssert(person);
+
+		assertThatNoException().isThrownBy(() -> personAssert.hasDiscountRateEqualTo(DISCOUNT_RATE));
+	}
+
+	@Test
+	public void should_throw_exception_when_discount_not_equal() {
+		final double ACTUAL_DISCOUNT_RATE = 7D;
+		final double EXPECTED_DISCOUNT_RATE = 11D;
+
+		Person person = person("Wilma", 3, Occupation.UNEMPLOYED);
+		person.setDiscountRate(ACTUAL_DISCOUNT_RATE);
+		PersonAssert personAssert = new PersonAssert(person);
+
+		assertThatThrownBy(() -> personAssert.hasDiscountRateEqualTo(EXPECTED_DISCOUNT_RATE))
+				.isInstanceOf(AssertionError.class)
+				.hasMessage("Expected discount rate to be <%s> but was <%s>",
+						EXPECTED_DISCOUNT_RATE, ACTUAL_DISCOUNT_RATE);
 	}
 
 	private Person person(String name, int itemCount, Occupation occupation) {
