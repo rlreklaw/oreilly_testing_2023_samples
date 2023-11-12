@@ -1,10 +1,12 @@
 package com.example.week1.part3;
 
-public class NoOfBoughtGoodsDiscountApplier implements DiscountApplier {
+public class BoughtItemsCountDiscountApplier implements DiscountApplier {
+	public static final int ITEM_COUNT_THRESHOLD = 5;
+	public static final double DISCOUNT_RATE = 5D;
 
 	private final MessageSender messageSender;
 
-	public NoOfBoughtGoodsDiscountApplier(MessageSender messageSender) {
+	public BoughtItemsCountDiscountApplier(MessageSender messageSender) {
 		this.messageSender = messageSender;
 	}
 
@@ -18,9 +20,9 @@ public class NoOfBoughtGoodsDiscountApplier implements DiscountApplier {
 	}
 
 	private static double rate(Person person) {
-		if (person.getNumberOfBoughtGoods() < 5) {
+		if (person.getNumberOfBoughtGoods() < ITEM_COUNT_THRESHOLD) {
 			return 0D;
 		}
-		return 5D;
+		return DISCOUNT_RATE;
 	}
 }

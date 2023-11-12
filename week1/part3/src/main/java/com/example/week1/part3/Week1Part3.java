@@ -19,7 +19,7 @@ public class Week1Part3 {
 
 	void calculateDiscount(Person person) {
 		MessageSender messageSender = message -> System.out.println("Sending a message [" + message + "]");
-		List<DiscountApplier> appliers = Arrays.asList(new OccupationDiscountApplier(new DatabaseRateRepository(), messageSender), new NoOfBoughtGoodsDiscountApplier(messageSender), new NameDiscountApplier(messageSender));
+		List<DiscountApplier> appliers = Arrays.asList(new OccupationDiscountApplier(new DatabaseRateRepository(), messageSender), new BoughtItemsCountDiscountApplier(messageSender), new NameDiscountApplier(messageSender));
 		DiscountCalculator discountCalculator = new DiscountCalculator(appliers);
 		discountCalculator.calculateTotalDiscountRate(person);
 		System.out.println("Total discount rate for person [" + person + "] is equal to [" + person.getDiscountRate() + "]");
