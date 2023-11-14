@@ -1,7 +1,9 @@
 package com.example.week2.part2;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import java.util.Arrays;
-import java.util.List;
 
 public class Week2Part2 {
 
@@ -17,11 +19,15 @@ public class Week2Part2 {
 		System.exit(0);
 	}
 
-	Discount calculateDiscount(Person person) {
-		List<DiscountApplier> appliers = Arrays.asList(new OccupationDiscountApplier(new FixedRateRepository()), new ItemsBoughtCountDiscountApplier(4, 8), new NameDiscountApplier(6, 5));
-		DiscountCalculator discountCalculator = new DiscountCalculator(appliers);
+	void calculateDiscount(Person person) {
+		ApplicationContext context = new AnnotationConfigApplicationContext(DiscountConfiguration.class);
+		DiscountCalculator discountCalculator = context.getBean(DiscountCalculator.class);
+
+//		List<DiscountApplier> appliers = Arrays.asList(new OccupationDiscountApplier(new FixedRateRepository()), new ItemsBoughtCountDiscountApplier(4, 8), new NameDiscountApplier(6, 5));
+//		DiscountCalculator discountCalculator = new DiscountCalculator(appliers);
+//		Discount totalDiscount = discountCalculator.calculateTotalDiscountRate(person);
+
 		Discount totalDiscount = discountCalculator.calculateTotalDiscountRate(person);
 		System.out.println("Total discount rate for person [" + person + "] is equal to [" + totalDiscount.getRate() + "]");
-		return totalDiscount;
 	}
 }
