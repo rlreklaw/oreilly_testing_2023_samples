@@ -1,12 +1,12 @@
 package com.example.week2.part2;
 
-public class NoOfBoughtGoodsDiscountApplier implements DiscountApplier {
+public class ItemsBoughtCountDiscountApplier implements DiscountApplier {
 
 	private final int threshold;
 
 	private final double discountRate;
 
-	public NoOfBoughtGoodsDiscountApplier(int threshold, double discountRate) {
+	public ItemsBoughtCountDiscountApplier(int threshold, double discountRate) {
 		this.threshold = threshold;
 		this.discountRate = discountRate;
 	}
