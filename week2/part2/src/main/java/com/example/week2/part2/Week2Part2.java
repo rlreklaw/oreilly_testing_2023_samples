@@ -18,7 +18,7 @@ public class Week2Part2 {
 	}
 
 	Discount calculateDiscount(Person person) {
-		List<DiscountApplier> appliers = Arrays.asList(new OccupationDiscountApplier(new FixedRateRepository()), new NoOfBoughtGoodsDiscountApplier(4, 8), new NameDiscountApplier(6, 5));
+		List<DiscountApplier> appliers = Arrays.asList(new OccupationDiscountApplier(new FixedRateRepository()), new ItemsBoughtCountDiscountApplier(4, 8), new NameDiscountApplier(6, 5));
 		DiscountCalculator discountCalculator = new DiscountCalculator(appliers);
 		Discount totalDiscount = discountCalculator.calculateTotalDiscountRate(person);
 		System.out.println("Total discount rate for person [" + person + "] is equal to [" + totalDiscount.getRate() + "]");
