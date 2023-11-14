@@ -8,7 +8,7 @@
 		<groupId>com.example.testingworkshop</groupId>
 		<artifactId>testing-workshop-2023-samples-parent-week2</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>testing-workshop-2023-samples-week2-part2</artifactId>
@@ -37,6 +37,18 @@
 	</dependencyManagement>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>6.0.13</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>6.0.13</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
