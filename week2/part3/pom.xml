@@ -8,7 +8,7 @@
 		<groupId>com.example.testingworkshop</groupId>
 		<artifactId>testing-workshop-2023-samples-parent-week2</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>testing-workshop-2023-samples-week2-part3</artifactId>
@@ -18,7 +18,7 @@
 	<description>${project.artifactId}</description>
 
 	<properties>
-		<spring-boot.version>3.0.6</spring-boot.version>
+		<spring-boot.version>3.1.5</spring-boot.version>
 		<wiremock.version>2.35.0</wiremock.version>
 
 		<maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
@@ -76,7 +76,9 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.2.2</version>
 			</plugin>
 		</plugins>
 	</build>
