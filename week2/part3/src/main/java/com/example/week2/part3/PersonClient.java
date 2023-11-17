@@ -41,9 +41,11 @@ class PersonClient {
 
 	double getDiscount(String resourceId) {
 		try {
-			return restTemplate.getForObject(this.rootUrl + "/person/" + resourceId + "/discount", PersonDiscountResponse.class).discountRate();
+			return restTemplate.getForObject(this.rootUrl + "/person/" + resourceId + "/discount",
+					PersonDiscountResponse.class).discountRate();
 		} catch (Exception ex) {
-			log.warn("Exception occurred while trying to fetch a discount for person with id [" + resourceId + "]. Will not apply any discounts", ex);
+			log.warn("Exception occurred while trying to fetch a discount for person with id ["
+					+ resourceId + "]. Will not apply any discounts", ex);
 			return 0;
 		}
 	}

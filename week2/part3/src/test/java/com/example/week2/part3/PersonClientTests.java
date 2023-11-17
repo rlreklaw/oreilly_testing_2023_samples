@@ -3,6 +3,7 @@ package com.example.week2.part3;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Nested;
@@ -11,7 +12,12 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 
 class PersonClientTests {
@@ -22,8 +28,12 @@ class PersonClientTests {
 
 	private static final PersonDetailsResponse.Status EXPECTED_STORED_RESPONSE_STATUS = PersonDetailsResponse.Status.STORED;
 
-	// TODO: Fix me - register a WireMock JUnit 5 extension with a dynamic port and static dsl
-	static WireMockExtension wm;
+	// register a WireMock JUnit 5 extension with a dynamic port and static dsl
+	@RegisterExtension
+	static WireMockExtension wm = WireMockExtension.newInstance()
+			.options(wireMockConfig().dynamicPort())
+			.configureStaticDsl(true)
+			.build();
 
 	PersonClient personClient = new PersonClient(restTemplate(), "http://localhost:" + wm.getPort());
 
@@ -38,72 +48,89 @@ class PersonClientTests {
 		@Test
 		void should_return_person_details_response_when_not_in_manual_processing() {
 			WireMock.stubFor(WireMock.post("/person/smith")
-					// TODO: Fix me - add application/json content-type matching
-					// TODO: Fix me - add json body matching to json mr smith
+					.withHeader("Content-Type", WireMock.equalTo("application/json"))
+					.withRequestBody(WireMock.equalToJson(toJson(mrSmith)))
 					.willReturn(WireMock.aResponse()
-							// TODO: Fix me - add application/json content-type matching
+							.withHeader("Content-Type", "application/json")
 							.withBody(toJson(storedProcessingResponse()))));
 
 			PersonDetailsResponse response = personClient.updatePersonDetails(mrSmith);
 
 			// Soft Assertions assert everything and throw exception at the end with the list of all failing assertions
 			SoftAssertions.assertSoftly(softAssertions -> {
-				// TODO: Fix me - assert that the fields contain proper values
+				softAssertions.assertThat(response.name()).isEqualTo(EXPECTED_PERSON_NAME);
+				softAssertions.assertThat(response.resourceId()).isEqualTo(EXPECTED_REFERENCE_ID);
+				softAssertions.assertThat(response.status()).isEqualTo(EXPECTED_STORED_RESPONSE_STATUS);
 			});
 		}
 
 		@Test
 		void should_fail_with_manual_processing_exception_for_manual_processing_status() {
 			WireMock.stubFor(WireMock.post("/person/smith")
-					// TODO: Fix me - add application/json content-type matching
-					// TODO: Fix me - add json body matching to json mr smith
+					.withHeader("Content-Type", WireMock.equalTo("application/json"))
+					.withRequestBody(WireMock.equalToJson(toJson(mrSmith)))
 					.willReturn(WireMock.aResponse()
-							// TODO: Fix me - add application/json content-type matching
+							.withHeader("Content-Type", "application/json")
 							.withBody(toJson(manualProcessingResponse()))));
 
-			// TODO: Fix me - add assertion, PersonInManualProcessingException should be thrown
+			thenThrownBy(() -> personClient.updatePersonDetails(mrSmith))
+					.isInstanceOf(PersonInManualProcessingException.class);
 		}
 
 		@Test
 		void should_fail_with_timeout_from_server() {
-			WireMock.stubFor(WireMock.post("/person/smith"));
-					// TODO: Fix me - add application/json content-type matching
-					// TODO: Fix me - add json body matching to json mr smith
-					// TODO: Add fixed delay of 1000
+			WireMock.stubFor(WireMock.post("/person/smith")
+					.withHeader("Content-Type", WireMock.equalTo("application/json"))
+					.withRequestBody(WireMock.equalToJson(toJson(mrSmith)))
+					.willReturn(WireMock.aResponse()
+							.withFixedDelay(1000)));
 
-			// TODO: Fix me - add assertion, PersonNotStoredException should be thrown + check the root cause
+			thenThrownBy(() -> personClient.updatePersonDetails(mrSmith))
+					.isInstanceOf(PersonNotStoredException.class)
+					.hasRootCauseInstanceOf(SocketTimeoutException.class);
 		}
 
 		@Test
 		void should_fail_with_connection_reset_by_peer_from_server() {
-			WireMock.stubFor(WireMock.post("/person/smith"));
-			// TODO: Add Fault.CONNECTION_RESET_BY_PEER fault
+			WireMock.stubFor(WireMock.post("/person/smith")
+					.willReturn(WireMock.aResponse()
+							.withFault(Fault.CONNECTION_RESET_BY_PEER)));
 
-			// TODO: Fix me - add assertion, PersonNotStoredException should be thrown + check the root cause
+			thenThrownBy(() -> personClient.updatePersonDetails(mrSmith))
+					.isInstanceOf(PersonNotStoredException.class)
+					.hasRootCauseInstanceOf(SocketException.class);
 		}
 
 		@Test
 		void should_fail_with_empty_response_from_server() {
-			WireMock.stubFor(WireMock.post("/person/smith"));
-			// TODO: Add Fault.EMPTY_RESPONSE fault;
+			WireMock.stubFor(WireMock.post("/person/smith")
+					.willReturn(WireMock.aResponse()
+							.withFault(Fault.EMPTY_RESPONSE)));
 
-			// TODO: Fix me - add assertion, PersonNotStoredException should be thrown + check the root cause
+			thenThrownBy(() -> personClient.updatePersonDetails(mrSmith))
+					.isInstanceOf(PersonNotStoredException.class)
+					.hasRootCauseInstanceOf(SocketException.class);
 		}
 
 		@Test
 		void should_fail_with_malformed_response_from_server() {
-			WireMock.stubFor(WireMock.post("/person/smith"));
-			// TODO: Add Fault.MALFORMED_RESPONSE_CHUNK fault
+			WireMock.stubFor(WireMock.post("/person/smith")
+					.willReturn(WireMock.aResponse()
+							.withFault(Fault.MALFORMED_RESPONSE_CHUNK)));
 
-			// TODO: Fix me - add assertion, PersonNotStoredException should be thrown + check the root cause
+			thenThrownBy(() -> personClient.updatePersonDetails(mrSmith))
+					.isInstanceOf(PersonNotStoredException.class)
+					.hasRootCauseInstanceOf(IOException.class);
 		}
 
 		@Test
 		void should_fail_with_random_data_then_close_from_server() {
-			WireMock.stubFor(WireMock.post("/person/smith"));
-			// TODO: Add Fault.RANDOM_DATA_THEN_CLOSE fault
+			WireMock.stubFor(WireMock.post("/person/smith")
+					.willReturn(WireMock.aResponse()
+							.withFault(Fault.RANDOM_DATA_THEN_CLOSE)));
 
-			// TODO: Fix me - add assertion, PersonNotStoredException should be thrown + check the root cause
+			thenThrownBy(() -> personClient.updatePersonDetails(mrSmith))
+					.isInstanceOf(PersonNotStoredException.class);
 		}
 
 		private static PersonDetailsResponse storedProcessingResponse() {
@@ -120,65 +147,69 @@ class PersonClientTests {
 		@Test
 		void should_return_discount_for_person() {
 			WireMock.stubFor(WireMock.get("/person/1/discount")
-					.willReturn(WireMock.aResponse()));
-							// TODO: Fix me - add application/json content-type matching
-							// TODO: Fix me - add json body matching to discount response of mr smith with 10.5 discount rate
+					.willReturn(WireMock.aResponse()
+					.withHeader("Content-Type", "application/json")
+							.withBody(toJson(new PersonDiscountResponse(EXPECTED_PERSON_NAME, 10.5D)))));
 
-			double response = personClient.getDiscount("1");
+			double discount = personClient.getDiscount("1");
 
-			// TODO: Fix me - add assertion, should be 10.5
+			assertThat(discount).isEqualTo(10.5D);
 		}
 
 		@Test
 		void should_return_no_discount_with_timeout_from_server() {
 			WireMock.stubFor(WireMock.get("/person/1/discount")
-					// TODO: Fix me - add application/json content-type matching
-					.willReturn(WireMock.aResponse()));
-			// TODO: Add Fixed delay of 1000 millis
+					.withHeader("Content-Type", WireMock.equalTo("application/json"))
+					.willReturn(WireMock.aResponse()
+							.withFixedDelay(1000)));
 
-			double response = personClient.getDiscount("1");
+			double discount = personClient.getDiscount("1");
 
-			// TODO: Fix me - add assertion, should be 0
+			assertThat(discount).isZero();
 		}
 
 		@Test
 		void should_return_no_discount_with_connection_reset_by_peer_from_server() {
-			WireMock.stubFor(WireMock.get("/person/1/discount"));
-			// TODO: Add Fault.CONNECTION_RESET_BY_PEER fault
+			WireMock.stubFor(WireMock.get("/person/1/discount")
+					.willReturn(WireMock.aResponse()
+							.withFault(Fault.CONNECTION_RESET_BY_PEER)));
 
-			double response = personClient.getDiscount("1");
+			double discount = personClient.getDiscount("1");
 
-			// TODO: Fix me - add assertion, should be 0
+			assertThat(discount).isZero();
 		}
 
 		@Test
 		void should_return_no_discount_with_empty_response_from_server() {
-			WireMock.stubFor(WireMock.get("/person/1/discount"));
-			// TODO: Add Fault.EMPTY_RESPONSE fault
+			WireMock.stubFor(WireMock.get("/person/1/discount")
+					.willReturn(WireMock.aResponse()
+							.withFault(Fault.EMPTY_RESPONSE)));
 
-			double response = personClient.getDiscount("1");
+			double discount = personClient.getDiscount("1");
 
-			// TODO: Fix me - add assertion, , should be 0should be 0
+			assertThat(discount).isZero();
 		}
 
 		@Test
 		void should_return_no_discount_with_malformed_response_from_server() {
-			WireMock.stubFor(WireMock.get("/person/1/discount"));
-			// TODO: Add Fault.MALFORMED_RESPONSE_CHUNK fault
+			WireMock.stubFor(WireMock.get("/person/1/discount")
+					.willReturn(WireMock.aResponse()
+							.withFault(Fault.MALFORMED_RESPONSE_CHUNK)));
 
-			double response = personClient.getDiscount("1");
+			double discount = personClient.getDiscount("1");
 
-			// TODO: Fix me - add assertion, should be 0
+			assertThat(discount).isZero();
 		}
 
 		@Test
 		void should_return_no_discount_with_random_data_then_close_from_server() {
-			WireMock.stubFor(WireMock.get("/person/1/discount"));
-			// TODO: Add Fault.RANDOM_DATA_THEN_CLOSE fault
+			WireMock.stubFor(WireMock.get("/person/1/discount")
+					.willReturn(WireMock.aResponse()
+							.withFault(Fault.RANDOM_DATA_THEN_CLOSE)));
 
-			double response = personClient.getDiscount("1");
+			double discount = personClient.getDiscount("1");
 
-			// TODO: Fix me - add assertion, should be 0
+			assertThat(discount).isZero();
 		}
 	}
 
