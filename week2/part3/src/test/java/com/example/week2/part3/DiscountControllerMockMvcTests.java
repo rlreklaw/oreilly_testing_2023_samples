@@ -6,14 +6,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-// TODO: Fix me - add missing web mvc test slice
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest
 @ContextConfiguration(classes = DiscountControllerMockMvcTests.MyTestConfiguration.class)
 class DiscountControllerMockMvcTests {
 
@@ -27,10 +33,11 @@ class DiscountControllerMockMvcTests {
 		mockMvc.perform(MockMvcRequestBuilders.post("/discount")
 						.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(
-						new Person("foo", 100, Occupation.UNEMPLOYED))));
-				// TODO: Fix me - Expect status 200
-				// TODO: Fix me - Expect JsonPath $.personName to be equal to foo
-				// TODO: Fix me - Expect JsonPath $.discountRate to be equal to 10.0;
+						new Person("foo", 100, Occupation.UNEMPLOYED))))
+				.andExpect(status().is(200))
+				.andExpect(jsonPath("$.personName", equalTo("foo")))
+				.andExpect(jsonPath("$.discountRate", equalTo(10.0D)));
+
 	}
 
 	// Error scenario - Validation handling
@@ -39,8 +46,8 @@ class DiscountControllerMockMvcTests {
 		mockMvc.perform(MockMvcRequestBuilders.post("/discount")
 						.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(
-						new Person("", 100, Occupation.UNEMPLOYED))));
-				// TODO: Fix me - Expect status Bad Request
+						new Person("", 100, Occupation.UNEMPLOYED))))
+				.andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
 	}
 
 	// Error scenario - custom exception handling
@@ -49,10 +56,11 @@ class DiscountControllerMockMvcTests {
 		mockMvc.perform(MockMvcRequestBuilders.post("/discount")
 						.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(
-						new Person("foo", 0, Occupation.UNEMPLOYED))));
-				// TODO: Fix me - Expect status Bad Request
-				// TODO: Fix me - Expect JsonPath $.person.name to be equal to foo
-				// TODO: Fix me - Expect JsonPath $.additionalMessage to be properly set (look at DiscountControllerExceptionHandler)
+						new Person("foo", 0, Occupation.UNEMPLOYED))))
+				.andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+				.andExpect(jsonPath("$.person.name", equalTo("foo")))
+				.andExpect(jsonPath("$.additionalMessage",
+						equalTo("We can't apply discounts to people who didn't buy any goods")));
 	}
 
 	@TestConfiguration(proxyBeanMethods = false)
