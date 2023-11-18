@@ -3,6 +3,7 @@ package com.example.week2.part3;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-// TODO: Fix me - Start a WireMock instance on port 12345
+@WireMockTest(httpPort = 12345)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Week2Part3.class, properties = "person.url=http://localhost:12345")
 class AcceptanceTests {
 
@@ -25,19 +26,28 @@ class AcceptanceTests {
 	@Autowired
 	ObjectMapper objectMapper;
 
+	static final Person PERSON_UNEMPLOYED_BUYING_MANY_GOODS = new Person("foo", 100,
+			Occupation.UNEMPLOYED);
+	static final String RESOURCE_ID = "1";
+
 	@BeforeEach
 	void setupWireMock() {
 		WireMock.stubFor(WireMock.post("/person/foo")
-				// TODO: Fix me - add application/json content-type matching
-				// TODO: Fix me - add json body matching to person with name foo number of bought goods 100 and unemployed occupation
-				.willReturn(WireMock.aResponse()));
-						// TODO: Fix me - add application/json content-type matching
-						// TODO: Fix me - add json body matching to person details response of name foo, resource id "1" and discount status STORED
+								.withHeader("Content-Type", WireMock.equalTo("application/json"))
+								.withRequestBody(WireMock.equalToJson(toJson(PERSON_UNEMPLOYED_BUYING_MANY_GOODS)))
+				.willReturn(WireMock.aResponse()
+						.withHeader("Content-Type", "application/json")
+						.withBody(toJson(new PersonDetailsResponse(PERSON_UNEMPLOYED_BUYING_MANY_GOODS.getName(),
+								RESOURCE_ID,
+								PersonDetailsResponse.Status.STORED))))
+		);
 
-		WireMock.stubFor(WireMock.get("/person/1/discount")
-				.willReturn(WireMock.aResponse()));
-						// TODO: Fix me - add application/json content-type matching
-						// TODO: Fix me - add json body matching to person discount response of name foo and discount rate 10.5
+		WireMock.stubFor(WireMock.get("/person/" + RESOURCE_ID + "/discount")
+				.willReturn(WireMock.aResponse()
+						.withHeader("Content-Type", "application/json")
+						.withBody(toJson(new PersonDiscountResponse("foo", 10.5D)))
+				)
+		);
 	}
 
 	@Test
@@ -45,7 +55,7 @@ class AcceptanceTests {
 		ResponseEntity<DiscountResponse> discountResponseEntity =
 				new TestRestTemplate().exchange(
 						RequestEntity.post("http://localhost:" + port + "/discount")
-								.body("TODO: pass in a person object that will match the json stub")
+								.body(PERSON_UNEMPLOYED_BUYING_MANY_GOODS)
 						, DiscountResponse.class);
 
 		then(discountResponseEntity.getStatusCode().value()).isEqualTo(200);
