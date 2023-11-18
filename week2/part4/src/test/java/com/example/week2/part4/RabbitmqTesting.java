@@ -11,16 +11,18 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.GetResponse;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-// TODO: Make it a testcontainers test
+@Testcontainers
 interface RabbitmqTesting {
 
-	// TODO: Add missing annotation
-	// TODO: Add container to rabbitmq:3.8.3-management and exposed ports 5672, 15672
-	GenericContainer rabbitmq = null;
-
+	@Container
+	GenericContainer rabbitmq = new GenericContainer(DockerImageName.parse("rabbitmq:3.8.3-management"))
+			.withExposedPorts(5672, 15672);
 
 	default void givenAMessageSentToBroker(String message, String queue) throws IOException, TimeoutException {
 		ConnectionFactory factory = connectionFactory();
@@ -45,7 +47,7 @@ interface RabbitmqTesting {
 
 	default String readFile(String classpathPath) {
 		try {
-			return null; // TODO: Fix me - read a file from classpath
+			return Files.readString(Path.of(RabbitmqTesting.class.getResource(classpathPath).toURI()));
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);

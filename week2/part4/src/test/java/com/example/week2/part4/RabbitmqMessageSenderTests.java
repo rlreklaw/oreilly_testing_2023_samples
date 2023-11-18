@@ -1,5 +1,6 @@
 package com.example.week2.part4;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -20,7 +21,7 @@ class RabbitmqMessageSenderTests {
 	@Nested
 	class IntegrationTests implements RabbitmqTesting {
 
-		String outputMessage; // TODO: Fix me - read the json/calculatedEvent.json file
+		String outputMessage;
 
 		String outputQueue = "output";
 
@@ -28,7 +29,8 @@ class RabbitmqMessageSenderTests {
 
 		@BeforeEach
 		void setup() {
-			sender = null; // TODO: Create the sender, check RabbitmqTesting for helper methods to create this instance
+			sender = new RabbitMqMessageSender(outputQueue, connectionFactory(), new ObjectMapper());
+			outputMessage = readFile("/json/calculatedEvent.json");
 		}
 
 		@Test
@@ -37,7 +39,7 @@ class RabbitmqMessageSenderTests {
 
 			Awaitility.await()
 					.untilAsserted(() -> {
-						// TODO: Fix me - assert that the message was sent to the broker - check RabbitmqTesting for helper methods
+						thenMessageWasProperlySentToBroker(outputMessage, outputQueue);
 					});
 		}
 	}
