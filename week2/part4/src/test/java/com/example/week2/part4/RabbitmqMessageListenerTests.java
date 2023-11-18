@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.awaitility.Awaitility;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,12 +30,12 @@ class RabbitmqMessageListenerTests {
 
 		String inputQueue = "input";
 
-		MessageListener<Person> listener;
+		TestRabbitmqMessageListener listener;
 
 		@BeforeEach
 		void setup() {
-			listener = new RabbitMqMessageListener(inputQueue, connectionFactory(), new ObjectMapper()); // TODO: Fix me - use a test type, otherwise the test will never stop!
-			inputMessage = null; // TODO: Fix me - read the json/mrSmith.json file
+			listener = new TestRabbitmqMessageListener(inputQueue, connectionFactory(), new ObjectMapper());
+			inputMessage = readFile("/json/mrSmith.json");
 		}
 
 		@Test
@@ -43,6 +45,9 @@ class RabbitmqMessageListenerTests {
 			listener.pollForMessage(person -> { });
 
 			// TODO: Fix me - add assertion. If you use a test message listener it will have an atomic reference to the message. Check if it's equal to Mr Smith Person object
+			Awaitility.await()
+					.untilAtomic(listener.message,
+							Matchers.equalTo(new Person("smith", 100, Occupation.EMPLOYED)));
 		}
 	}
 }
