@@ -44,7 +44,6 @@ class RabbitmqMessageListenerTests {
 
 			listener.pollForMessage(person -> { });
 
-			// TODO: Fix me - add assertion. If you use a test message listener it will have an atomic reference to the message. Check if it's equal to Mr Smith Person object
 			Awaitility.await()
 					.untilAtomic(listener.message,
 							Matchers.equalTo(new Person("smith", 100, Occupation.EMPLOYED)));
