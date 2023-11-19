@@ -1,6 +1,6 @@
 package com.example.week3.part1.model;
 
-public class Discount extends Object {
+public class Discount {
 	private final double rate;
 
 	public Discount(double rate) {

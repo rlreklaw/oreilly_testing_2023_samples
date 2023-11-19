@@ -2,17 +2,18 @@ package com.example.week3.part1.applier;
 
 import com.example.week3.part1.model.Person;
 
+import java.util.logging.Logger;
+
 public class NameDiscountAp implements DiscountApplier {
+	final Logger LOG = Logger.getLogger(NameDiscountAp.class.getName());
 
 	static final int THRESHOLD = 3;
 
 	static final double DISCOUNT_RATE = 8D;
 
-	private Person p;
-
 	@Override
 	public double getDiscountRate(Person person) {
-		System.out.println("Calculating name discount");
+		LOG.fine("Calculating name discount");
 		if (person.getName().length() < THRESHOLD) { // most likely a prank!
 			return 0D;
 		}

@@ -2,6 +2,7 @@ package com.example.week3.part1;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.example.week3.part1.applier.DiscountApplier;
 import com.example.week3.part1.model.Discount;
@@ -9,6 +10,7 @@ import com.example.week3.part1.model.Occupation;
 import com.example.week3.part1.model.Person;
 
 public class Week3Part1 {
+	Logger LOG = Logger.getLogger(Week3Part1.class.getName());
 
 	// name noOfBoughtGoods Occupation
 	// foo 15 EMPLOYED
@@ -26,7 +28,7 @@ public class Week3Part1 {
 		List<DiscountApplier> appliers = DiscountApplier.defaultAppliers();
 		DiscountCalculator discountCalculator = new DiscountCalculator(appliers);
 		Discount totalDiscount = discountCalculator.calculateTotalDiscountRate(person);
-		System.out.println("Total discount rate for person [" + person + "] is equal to [" + totalDiscount.getRate() + "]");
+		LOG.fine("Total discount rate for person [" + person + "] is equal to [" + totalDiscount.getRate() + "]");
 		return totalDiscount;
 	}
 }

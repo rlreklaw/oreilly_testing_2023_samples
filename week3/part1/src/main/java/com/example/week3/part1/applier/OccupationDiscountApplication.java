@@ -3,7 +3,10 @@ package com.example.week3.part1.applier;
 import com.example.week3.part1.model.Person;
 import com.example.week3.part1.repository.RateRepository;
 
+import java.util.logging.Logger;
+
 public class OccupationDiscountApplication implements DiscountApplier {
+	Logger LOG = Logger.getLogger(OccupationDiscountApplication.class.getName());
 
 	private final RateRepository rateRepository;
 
@@ -13,7 +16,7 @@ public class OccupationDiscountApplication implements DiscountApplier {
 
 	@Override
 	public double getDiscountRate(Person person) {
-		System.out.println("Calculating occupation discount");
+		LOG.fine("Calculating occupation discount");
 		return rateRepository.getDiscountRate(person.getOccupation());
 	}
 }
