@@ -21,8 +21,7 @@ class AcceptanceTests {
 	}
 
 	@Nested
-			// TODO: Fix me - missing interface implementation with helper methods
-	class IntegrationTests {
+	class IntegrationTests implements RabbitmqTesting{
 
 
 		int goodsThreshold = 5;
@@ -31,24 +30,24 @@ class AcceptanceTests {
 		double nameDiscountRate = 8D;
 
 		@Test
-		void should_calculate_maximum_discount() {
-			String inputMessage = null; // TODO: Fix me - read mrSmith.json
-			String outputMessage = null; // TODO: Fix me - read mrSmithWithDiscountRate.json
+		void should_calculate_maximum_discount() throws Exception {
+			String inputMessage = readFile("/json/mrSmith.json");
+			String outputMessage = readFile("/json/mrSmithWithDiscountRate.json");
 			String inputQueue = "inputQueue";
 			String outputQueue = "outputQueue";
-			// TODO: Fix me - before tests a message should be sent out
 
-			// TODO: Connection factories can't be null
-			new Week2Part4(goodsThreshold, goodsDiscountRate, nameThreshold, nameDiscountRate, inputQueue, outputQueue, "events", null, null, new ObjectMapper()) {
+			givenAMessageSentToBroker(inputMessage, inputQueue);
+
+			new Week2Part4(goodsThreshold, goodsDiscountRate, nameThreshold, nameDiscountRate, inputQueue, outputQueue, "events", connectionFactory(), connectionFactory(), new ObjectMapper()) {
 				@Override
 				RabbitMqMessageListener getMessageListener(String inputQueueName, ConnectionFactory inputConnectionFactory, ObjectMapper objectMapper) {
-					return new RabbitMqMessageListener(inputQueueName, inputConnectionFactory, objectMapper); // TODO: Fix me - use the asserting listener
+					return new TestRabbitmqMessageListener(inputQueueName, inputConnectionFactory, objectMapper);
 				}
 			}.calculateDiscount();
 
 			Awaitility.await()
 					.untilAsserted(() -> {
-						// TODO: Fix me - check if message was properly sent to broker
+						thenMessageWasProperlySentToBroker(outputMessage, outputQueue);
 					});
 		}
 
