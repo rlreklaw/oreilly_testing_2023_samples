@@ -11,6 +11,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import static org.assertj.core.api.BDDAssertions.then;
+
 class DatabaseRateRepositoryTests {
 
 	@Nested
@@ -20,25 +22,27 @@ class DatabaseRateRepositoryTests {
 
 		@BeforeEach
 		void setup() {
-			// TODO: Initialize repository - check DbDiscountTesting for username, password and jdbc urls
+			repository = new DatabaseRateRepository(DB_USER, DB_PASSWORD, jdbcUrl());
 		}
 
 		@Test
 		void should_store_data_in_a_database() throws SQLException {
-			// TODO: Fix me - write the missing test
 			// when - repository stores a discount
+			repository.save(new Discount("foo", Occupation.EMPLOYED, 10D));
 			// then - a single discount was stored in the database
+			thenSingleDiscountWasStoredInDb("foo", Occupation.EMPLOYED, 10D);
 
 			// hint: check the DbDiscountTesting class for helper methods
 		}
 
 		@Test
 		void should_get_discount_rate_from_db() throws SQLException {
-			// TODO: Fix me - write the missing test
 			// given - a discount rate of X for given occupation Y was inserted to the database
+			givenDiscountRateWasInDatabase("foo", Occupation.EMPLOYED, 7D);
 			// when - repository retrieves the rate
+			double discount = repository.getDiscountRate(Occupation.EMPLOYED);
 			// then - rate for given occupation Y is equal to X
-
+			then(discount).isEqualTo(7D);
 			// hint: check the DbDiscountTesting class for helper methods
 		}
 
