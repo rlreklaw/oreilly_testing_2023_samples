@@ -6,7 +6,18 @@
 		 xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
 
 	<description>
-		foo
+		My Custom Rules
 	</description>
+
+	<rule ref="category/java/bestpractices.xml/SystemPrintln"/>
+	<rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
+	<rule ref="category/java/design.xml/MutableStaticState"/>
+	<rule ref="category/java/design.xml/UseUtilityClass"/>
+	<rule ref="category/java/bestpractices.xml/AvoidPrintStackTrace"/>
+	<rule ref="category/java/bestpractices.xml/LooseCoupling"/>
+	<rule ref="category/java/bestpractices.xml/MissingOverride"/>
+	<rule ref="category/java/codestyle.xml/ExtendsObject"/>
+	<rule ref="category/java/bestpractices.xml/UnusedPrivateField"/>
+	<rule ref="category/java/codestyle.xml/UnnecessaryImport"/>
 
 </ruleset>
