@@ -1,5 +1,6 @@
 package com.example.week2.part5;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -11,7 +12,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class DatabaseRateRepositoryTests {
 
@@ -56,12 +60,21 @@ class DatabaseRateRepositoryTests {
 		void should_throw_exception_when_issues_with_connection(String name, Consumer<DatabaseRateRepository> consumer) throws Exception {
 
 			// TODO: Fix me - write the missing test
-			// given - a mock Connection throws a SQLException on statement creation
-			// given - DatabaseRateRepository returns a mock connection
-			// when - repository calls a method
-			// then - a SQLException was thrown
+			Connection connection = mock();
+			when(connection.createStatement()).thenThrow(new SQLException("BOOM!"));
 
-			// hint: this is a parameterized test using MethodSources. Concrete actions to be taken by the repository are provided there
+			DatabaseRateRepository repo = new DatabaseRateRepository("foo", "bar", "baz") {
+				@Override
+				public Connection getConnection() {
+					return connection;
+				}
+			};
+
+			assertThatThrownBy(() -> consumer.accept(repo))
+					.hasMessageContaining("Failed to communicate with the database")
+					.hasRootCauseInstanceOf(SQLException.class)
+					.hasRootCauseMessage("BOOM!");
+
 		}
 
 		private static Stream<Arguments> repoActions() {
