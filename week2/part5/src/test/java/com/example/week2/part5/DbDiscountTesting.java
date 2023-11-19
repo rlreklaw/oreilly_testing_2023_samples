@@ -15,7 +15,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-// TODO: Make it a testcontainers test
+@Testcontainers
 public interface DbDiscountTesting {
 
 	Logger log = LoggerFactory.getLogger(DbUtils.class);
@@ -29,9 +29,11 @@ public interface DbDiscountTesting {
 	int EXPOSED_PORT = 3306;
 
 
-	// TODO: Add missing annotation
-	// TODO: Add container to mysql:8.0.33 with MYSQL_DATABASE env var equal to DB_NAME, MYSQL_ROOT_PASSWORD equal to DB_PASSWORD and exposed port EXPOSED_PORT
-	GenericContainer mysql = null;
+	@Container
+	GenericContainer mysql = new GenericContainer("mysql:8.0.33")
+			.withEnv("MYSQL_DATABASE", DB_NAME)
+			.withEnv("MYSQL_ROOT_PASSWORD", DB_PASSWORD)
+			.withExposedPorts(EXPOSED_PORT);
 
 	@BeforeEach
 	default void setupDb() throws SQLException {
