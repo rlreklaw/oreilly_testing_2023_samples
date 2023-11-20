@@ -6,6 +6,6 @@ public interface RateRepository {
 	double getDiscountRate(Occupation occupation);
 
 	static RateRepository defaultRateRepository() {
-		return new DbRateRepo();
+		return new DbRateRepository();
 	}
 }

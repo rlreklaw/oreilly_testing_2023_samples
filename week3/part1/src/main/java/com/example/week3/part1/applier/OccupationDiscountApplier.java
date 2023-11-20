@@ -5,12 +5,12 @@ import com.example.week3.part1.repository.RateRepository;
 
 import java.util.logging.Logger;
 
-public class OccupationDiscountApplication implements DiscountApplier {
-	Logger LOG = Logger.getLogger(OccupationDiscountApplication.class.getName());
+class OccupationDiscountApplier implements DiscountApplier {
+	Logger LOG = Logger.getLogger(OccupationDiscountApplier.class.getName());
 
 	private final RateRepository rateRepository;
 
-	public OccupationDiscountApplication(RateRepository rateRepository) {
+	public OccupationDiscountApplier(RateRepository rateRepository) {
 		this.rateRepository = rateRepository;
 	}
 

@@ -4,8 +4,8 @@ import com.example.week3.part1.model.Person;
 
 import java.util.logging.Logger;
 
-public class NameDiscountAp implements DiscountApplier {
-	final Logger LOG = Logger.getLogger(NameDiscountAp.class.getName());
+class NameDiscountApplier implements DiscountApplier {
+	final Logger LOG = Logger.getLogger(NameDiscountApplier.class.getName());
 
 	static final int THRESHOLD = 3;
 

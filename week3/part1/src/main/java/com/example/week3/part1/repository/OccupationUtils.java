@@ -4,7 +4,7 @@ import com.example.week3.part1.model.Occupation;
 
 import java.util.logging.Logger;
 
-public class OccupationUtils {
+class OccupationUtils {
 	final static Logger LOG = Logger.getLogger(OccupationUtils.class.getName());
 	private OccupationUtils() {};
 

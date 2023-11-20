@@ -10,6 +10,6 @@ public interface DiscountApplier {
 	double getDiscountRate(Person person);
 
 	static List<DiscountApplier> defaultAppliers() {
-		return Arrays.asList(new OccupationDiscountApplication(RateRepository.defaultRateRepository()), new NoOfBoughtGoodsDiscountApplierImpl(), new NameDiscountAp());
+		return Arrays.asList(new OccupationDiscountApplier(RateRepository.defaultRateRepository()), new NoOfBoughtGoodsDiscountApplier(), new NameDiscountApplier());
 	}
 }

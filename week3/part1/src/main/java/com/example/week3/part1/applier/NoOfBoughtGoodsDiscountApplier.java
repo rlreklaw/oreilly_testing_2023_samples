@@ -4,8 +4,8 @@ import com.example.week3.part1.model.Person;
 
 import java.util.logging.Logger;
 
-public class NoOfBoughtGoodsDiscountApplierImpl implements DiscountApplier {
-	Logger LOG = Logger.getLogger(NoOfBoughtGoodsDiscountApplierImpl.class.getName());
+class NoOfBoughtGoodsDiscountApplier implements DiscountApplier {
+	Logger LOG = Logger.getLogger(NoOfBoughtGoodsDiscountApplier.class.getName());
 
 	// This should be configurable
 	static final int THRESHOLD = 5;
