@@ -10,15 +10,23 @@ import com.example.week3.part2.client.PersonClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.springframework.cloud.contract.stubrunner.junit.StubRunnerExtension;
+import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
 
 class PersonClientTests {
 
 	//TODO: Fix me - add StubRunner extension
+	@RegisterExtension
+	static StubRunnerExtension rule = new StubRunnerExtension()
+			.downloadStub("com.example.testingworkshop","discount-calculator")
+			.stubsMode(StubRunnerProperties.StubsMode.LOCAL);
 
 	ObjectMapper objectMapper = new ObjectMapper();
 
-	PersonClient personClient = new PersonClient(HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(1)).build(),
-			null,  //TODO: Fix me - read URL from StubRunner extension
+	PersonClient personClient = new PersonClient(HttpClient.newBuilder()
+				.connectTimeout(Duration.ofSeconds(1)).build(),
+			rule.findStubUrl("discount-calculator").toString(),
 			objectMapper);
 
 	@Test
@@ -29,7 +37,11 @@ class PersonClientTests {
 		DiscountResponse discountResponse = personClient.discount(person);
 
 		SoftAssertions.assertSoftly(softAssertions -> {
-			throw new AssertionError("Fix me!"); //TODO: Fix me - assert that the response got properly parsed
+			softAssertions.assertThat(discountResponse.personName()).isNull();
+			softAssertions.assertThat(discountResponse.person()).isEqualTo(person);
+			softAssertions.assertThat(discountResponse.discountRate()).isZero();
+			softAssertions.assertThat(discountResponse.additionalMessage())
+					.isEqualTo("We can't apply discounts to people who didn't buy any goods");
 		});
 	}
 
@@ -40,7 +52,10 @@ class PersonClientTests {
 		DiscountResponse discountResponse = personClient.discount(person);
 
 		SoftAssertions.assertSoftly(softAssertions -> {
-			throw new AssertionError("Fix me!"); //TODO: Fix me - assert that the response got properly parsed
+			softAssertions.assertThat(discountResponse.personName()).isEqualTo("john");
+			softAssertions.assertThat(discountResponse.person()).isNull();
+			softAssertions.assertThat(discountResponse.discountRate()).isEqualTo(10d);
+			softAssertions.assertThat(discountResponse.additionalMessage()).isNull();
 		});
 	}
 }
