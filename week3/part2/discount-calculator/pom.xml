@@ -8,20 +8,23 @@
 		<groupId>com.example.testingworkshop</groupId>
 		<artifactId>testing-workshop-2023-samples-parent-week3-part2</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>discount-calculator</artifactId>
 	<packaging>jar</packaging>
 
 	<properties>
-		<javalin.version>5.4.2</javalin.version>
+		<javalin.version>5.6.3</javalin.version>
 		<junit-bom.version>5.9.2</junit-bom.version>
 		<logback.version>1.4.7</logback.version>
 		<jackson.version>2.15.1</jackson.version>
 
 		<maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
 		<slf4j-simple.version>2.0.6</slf4j-simple.version>
+
+		<spring-cloud.version>2022.0.1</spring-cloud.version>
+		<spring-cloud-contract.version>4.0.3</spring-cloud-contract.version>
 	</properties>
 
 	<name>${project.artifactId}</name>
@@ -58,7 +61,12 @@
 			<artifactId>junit-jupiter</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- TODO: Fix me - Add Spring Cloud Starter Contract Verifier dependency -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-contract-verifier</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<dependencyManagement>
@@ -70,7 +78,13 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			<!-- TODO: Fix me - Add Spring Cloud BOM dependency -->
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -80,12 +94,16 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin.version}</version>
 			</plugin>
-			<!-- TODO: Fix me - Set up Spring Cloud Contract Maven plugin
-				HINTS:
-				- extensions must be true
-				- use a single base class for tests
-				- use the EXPLICIT mode of tests
-			-->
+			<plugin>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-contract-maven-plugin</artifactId>
+				<version>${spring-cloud-contract.version}</version>
+				<extensions>true</extensions>
+				<configuration>
+					<testMode>EXPLICIT</testMode>
+					<baseClassForTests>com.example.week3.part2.calculator.BaseClass</baseClassForTests>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>

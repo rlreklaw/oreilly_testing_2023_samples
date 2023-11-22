@@ -1,12 +1,27 @@
-/* TODO: Fix me - "successful" scenario
+package contracts
 
-Request
- url `/discount`
- method `POST`
- header `Content-Type` : `application/json`
- body `{ "name" : "john", "numberOfBoughtGoods": 5, "occupation" : "EMPLOYED" }`
-Response
- status `200`
- header `Content-Type` : `application/json`
- body `{ "personName": "john", "discountRate": 10 }`
- */
+import org.springframework.cloud.contract.spec.Contract
+Contract.make {
+	request {
+		method('POST')
+		url('/discount')
+		headers {
+			contentType(applicationJson())
+		}
+		body([
+				"name" : "john",
+				"numberOfBoughtGoods": 5,
+				"occupation" : "EMPLOYED"
+		])
+	}
+	response {
+		status(200)
+		headers {
+			contentType(applicationJson())
+		}
+		body([
+				"personName": "john",
+				"discountRate": 10
+		])
+	}
+}
