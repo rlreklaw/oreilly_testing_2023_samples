@@ -49,9 +49,6 @@
 		</dependency>
 	</dependencies>
 
-	<!-- TODO: Fix me - add PIT plugin and configure it to run in the post-integration-test Maven phase -->
-	<!-- HINT: Remember about adding org.pitest:pitest-junit5-plugin dependency -->
-
 	<build>
 		<plugins>
 			<plugin>

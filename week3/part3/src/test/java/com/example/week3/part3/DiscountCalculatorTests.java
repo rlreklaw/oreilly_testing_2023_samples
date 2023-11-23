@@ -19,7 +19,20 @@ class DiscountCalculatorTests {
 		then(discount).isEqualTo(fixedDiscountRate1 + fixedDiscountRate2);
 	}
 
+	@Test
+	void should_return_zero_discount_when_no_person_specified() {
+		double fixedDiscountRate1 = 5D;
+		double fixedDiscountRate2 = 7D;
+		DiscountCalculator discountCalculator = new DiscountCalculator(Arrays.asList(person -> fixedDiscountRate1, person -> fixedDiscountRate2));
+
+		Discount discount = discountCalculator.calculateTotalDiscountRate(null);
+
+		then(discount).isEqualTo(0d);
+
+	}
+
 	private static Person person() {
 		return new Person("test", 1, Occupation.UNEMPLOYED);
 	}
+
 }

@@ -3,7 +3,7 @@ package com.example.week3.part3;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class OccupationUtils {
+public class OccupationUtils {
 
 	private static final Logger log = Logger.getLogger(OccupationUtils.class.getName());
 
