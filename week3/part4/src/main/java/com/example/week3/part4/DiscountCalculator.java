@@ -1,5 +1,6 @@
 package com.example.week3.part4;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +29,9 @@ public class DiscountCalculator {
 
 	private String name(Person person) {
 		int numberOfGoods = person.getNumberOfBoughtGoods();
-		long suffix = numberOfGoods + person.getCreationTimestamp(); // TODO: Fix me - what if you buy A LOT of goods and you have a BIG creation timestamp? Maybe you should look into BigDecimals?
+		BigInteger suffix = BigInteger.valueOf(numberOfGoods)
+				.add(BigInteger.valueOf(person.getCreationTimestamp()));
+
 		return DISCOUNT_PREFIX + suffix;
 	}
 
